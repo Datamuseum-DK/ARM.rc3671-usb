@@ -129,7 +129,7 @@ OBJS += sysinit.o pwm.o iap.o
 # GNU GCC compiler prefix and location
 ##########################################################################
 
-CROSS_COMPILE = arm-none-eabi-
+CROSS_COMPILE = arm-rtems-
 AS = $(CROSS_COMPILE)gcc
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)gcc
