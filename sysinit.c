@@ -68,7 +68,6 @@
   #include "core/usbcdc/usbcore.h"
   #include "core/usbcdc/usbhw.h"
   #include "core/usbcdc/cdcuser.h"
-  #include "core/usbcdc/cdc_buf.h"
 #endif
 
 #ifdef CFG_ST7565
@@ -272,26 +271,9 @@ int puts(const char * str)
   // This buffers all data and writes it out from the buffer one frame
   // and one millisecond at a time
   #ifdef CFG_PRINTF_USBCDC
-    if (USB_Configuration) 
-    {
-      while(*str)
-        cdcBufferWrite(*str++);
-      // Check if we can flush the buffer now or if we need to wait
-      unsigned int currentTick = systickGetTicks();
-      if (currentTick != lastTick)
-      {
-        uint8_t frame[64];
-        uint32_t bytesRead = 0;
-        while (cdcBufferDataPending())
-        {
-          // Read up to 64 bytes as long as possible
-          bytesRead = cdcBufferReadLen(frame, 64);
-          USB_WriteEP (CDC_DEP_IN, frame, bytesRead);
-          systickDelay(1);
-        }
-        lastTick = currentTick;
-      }
-    }
+	for(; *str; str++)
+		if (CDC_putchar(*str) < 0)
+			break;
   #else
     // Handle output character by character in __putchar
     while(*str) __putchar(*str++);

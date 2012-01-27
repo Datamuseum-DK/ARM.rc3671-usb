@@ -122,7 +122,7 @@ VPATH += core/usbhid-rom core/libc core/wdt core/usbcdc core/pwm
 VPATH += core/iap
 OBJS += adc.o cpu.o cmd.o gpio.o i2c.o pmu.o ssp.o systick.o timer16.o
 OBJS += timer32.o uart.o uart_buf.o usbconfig.o usbhid.o stdio.o string.o
-OBJS += wdt.o cdcuser.o cdc_buf.o usbcore.o usbdesc.o usbhw.o usbuser.o 
+OBJS += wdt.o cdcuser.o usbcore.o usbdesc.o usbhw.o usbuser.o 
 OBJS += sysinit.o pwm.o iap.o
 
 ##########################################################################

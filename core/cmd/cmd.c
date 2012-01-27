@@ -60,7 +60,6 @@
 
 #ifdef CFG_PRINTF_USBCDC
   #include "core/usbcdc/cdcuser.h"
-  static char usbcdcBuf [32];
 #endif
 
 #if CFG_INTERFACE_ENABLEIRQ == 1
@@ -87,19 +86,13 @@ void cmdPoll()
   #endif
 
   #if defined CFG_PRINTF_USBCDC
-    int  numBytesToRead, numBytesRead, numAvailByte;
-  
-    CDC_OutBufAvailChar (&numAvailByte);
-    if (numAvailByte > 0) 
-    {
-      numBytesToRead = numAvailByte > 32 ? 32 : numAvailByte; 
-      numBytesRead = CDC_RdOutBuf (&usbcdcBuf[0], &numBytesToRead);
-      int i;
-      for (i = 0; i < numBytesRead; i++) 
-      {  
-        cmdRx(usbcdcBuf[i]);   
-      }
-    }
+	int c;
+
+	do {
+		c = CDC_getchar();
+		if (c >= 0)
+			cmdRx(c);
+	} while (c >= 0);
   #endif
 }
 
