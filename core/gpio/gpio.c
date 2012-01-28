@@ -70,6 +70,7 @@ void PIOINT0_IRQHandler(void)
   return;
 }
 
+#if 0
 /**************************************************************************/
 /*! 
     @brief IRQ Handler for GPIO port 1 (currently checks pin 1.1)
@@ -107,6 +108,7 @@ void PIOINT1_IRQHandler(void)
 
   return;
 }
+#endif
 
 /**************************************************************************/
 /*! 
