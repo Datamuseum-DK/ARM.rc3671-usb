@@ -1,3 +1,7 @@
+# LPC1343 based LPT to USB port adapter
+
+Based on...
+
 # LPC1343 Code Base
 
 This software library is based on the freely available LPC1343 Reference
