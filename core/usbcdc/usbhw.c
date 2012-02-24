@@ -292,6 +292,7 @@ void USB_SetAddress (uint32_t adr) {
 void USB_Configure (uint32_t cfg) {
 
   WrCmdDat(CMD_CFG_DEV, DAT_WR_BYTE(cfg ? CONF_DVICE : 0));
+  WrCmdDat(CMD_SET_MODE, 8);
   return;
 }
 

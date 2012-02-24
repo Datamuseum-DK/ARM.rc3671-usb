@@ -48,7 +48,7 @@
   #include "core/cmd/cmd.h"
 #endif
 
-#define NPIN 17
+#include "core/usbcdc/cdcuser.h"
 
 /*
  * Pin connection:
@@ -63,16 +63,61 @@
  *	7	2.5	in	Data5
  *	8	2.6	in	Data6
  *	9	2.7	in	Data7
- *	10	0.11	out	-Ack
- *	11	0.10	out	Busy
- *	12	0.9	out	PaperEnd
- *	13	0.8	out	SelectStatus
+ *	10	0.11	out	-Ack		'd'
+ *	11	0.10	out	Busy		'c'
+ *	12	0.9	out	PaperEnd	'b'
+ *	13	0.8	out	SelectStatus	'a'
  *	14	3.0	in	AutoFeed
- *	15	3.1	out	-Error
+ *	15	3.1	out	-Error		'e'
  *	16	3.2	in	-Initialize
  *	17	3.3	in	-Select
  *	18-25	-	-	GND
  */
+
+
+static void
+sts(void)
+{
+	int j, i;
+	char s[64];
+
+	j = 0;
+	s[j++] = 's';
+	s[j++] = '0' + gpioGetValue(1, 1);
+	s[j++] = ' ';
+	for (i = 7; i >- 0; i--)
+		s[j++] = '0' + gpioGetValue(2, i);
+	s[j++] = ' ';
+	s[j++] = 'a';
+	s[j++] = '0' + gpioGetValue(3, 0);
+	s[j++] = ' ';
+	s[j++] = 'i';
+	s[j++] = '0' + gpioGetValue(3, 2);
+	s[j++] = ' ';
+	s[j++] = 's';
+	s[j++] = '0' + gpioGetValue(3, 3);
+	s[j++] = ' ';
+	s[j++] = ' ';
+	s[j++] = 's';
+	s[j++] = '0' + gpioGetValue(0, 8);
+	s[j++] = ' ';
+	s[j++] = 'p';
+	s[j++] = '0' + gpioGetValue(0, 9);
+	s[j++] = ' ';
+	s[j++] = 'b';
+	s[j++] = '0' + gpioGetValue(0, 10);
+	s[j++] = ' ';
+	s[j++] = 'a';
+	s[j++] = '0' + gpioGetValue(0, 11);
+	s[j++] = ' ';
+	s[j++] = 'e';
+	s[j++] = '0' + gpioGetValue(3, 1);
+	
+	s[j++] = '\0';
+	puts(s);
+	puts("\r\n");
+}
+
 
 static int8_t got_prn;
 
@@ -89,13 +134,10 @@ PIOINT1_IRQHandler(void)
 	}
 }
 
-
 static void
 prt(void)
 {
 	int i, j;
-	int t;
-	char s[NPIN+10], ls[NPIN+10];
 
 	printf("\r\nHello World\r\n");
 
@@ -131,51 +173,34 @@ prt(void)
 	gpioSetValue(0,10,0);
 	gpioSetValue(0,9,0);
 
-	t = 0;
-	*ls = '\0';
 	while (1) {
-		if (systickGetSecondsActive() != t) {
-			t = systickGetSecondsActive();
-			*ls = '\0';
-		}
 		j = CDC_getchar();
 		switch (j) {
-		case 'a':	gpioSetValue(0,8,0); break;
-		case 'A':	gpioSetValue(0,8,1); break;
-		case 'b':	gpioSetValue(0,9,0); break;
-		case 'B':	gpioSetValue(0,9,1); break;
-		case 'c':	gpioSetValue(0,10,0); break;
-		case 'C':	gpioSetValue(0,10,1); break;
-		case 'd':	gpioSetValue(0,11,0); break;
-		case 'D':	gpioSetValue(0,11,1); break;
-		case 'e':	gpioSetValue(3,1,0); break;
-		case 'E':	gpioSetValue(3,1,1); break;
+		case 's':	gpioSetValue(0,8,0); sts(); break;
+		case 'S':	gpioSetValue(0,8,1); sts(); break;
+		case 'p':	gpioSetValue(0,9,0); sts(); break;
+		case 'P':	gpioSetValue(0,9,1); sts(); break;
+		case 'b':	gpioSetValue(0,10,0); sts(); break;
+		case 'B':	gpioSetValue(0,10,1); sts(); break;
+		case 'a':	gpioSetValue(0,11,0); sts(); break;
+		case 'A':	gpioSetValue(0,11,1); sts(); break;
+		case 'e':	gpioSetValue(3,1,0); sts(); break;
+		case 'E':	gpioSetValue(3,1,1); sts(); break;
+		case 'x':
+			while (1) 
+				CDC_putchar('x');
+			break;
 		case '?':
-			j = 0;
-			s[j++] = '0' + gpioGetValue(1, 1);
-			s[j++] = ' ';
-			for (i = 0; i < 8; i++)
-				s[j++] = '0' + gpioGetValue(2, i);
-			s[j++] = ' ';
-			for (i = 0; i < 4; i++)
-				s[j++] = '0' + gpioGetValue(0, 8 + i);
-			s[j++] = ' ';
-			for (i = 0; i < 4; i++)
-				s[j++] = '0' + gpioGetValue(3, i);
-			
-			s[j++] = '\0';
-			printf("%s %x", s, got_prn);
-			puts("\r\n");
+			sts();
 			break;
 		}
 
 		if (gpioGetValue(0, 10)) {
 			CDC_putchar(got_prn);
-			for (j = 0; j < 10; j++)
+			for (j = 0; j < 2; j++)
 				gpioSetValue(0,11,0);
 			gpioSetValue(0,11,1);
 			gpioSetValue(0,10,0);
-			continue;
 		}
 	}
 
