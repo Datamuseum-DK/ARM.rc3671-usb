@@ -123,13 +123,13 @@ VPATH += core/iap
 OBJS += adc.o cpu.o cmd.o gpio.o i2c.o pmu.o ssp.o systick.o timer16.o
 OBJS += timer32.o uart.o uart_buf.o usbconfig.o usbhid.o stdio.o string.o
 OBJS += wdt.o cdcuser.o usbcore.o usbdesc.o usbhw.o usbuser.o 
-OBJS += sysinit.o pwm.o iap.o
+OBJS += sysinit.o pwm.o iap.o 
 
 ##########################################################################
 # GNU GCC compiler prefix and location
 ##########################################################################
 
-CROSS_COMPILE = arm-rtems-
+CROSS_COMPILE = /usr/local/gcc-arm-embedded-6-2017-q2-update/bin/arm-none-eabi-
 AS = $(CROSS_COMPILE)gcc
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)gcc
@@ -201,7 +201,8 @@ firmware: $(OBJS) $(SYS_OBJS)
 	$(OBJCOPY) $(OCFLAGS) -O binary $(OUTFILE).elf $(OUTFILE).bin
 	$(OBJCOPY) $(OCFLAGS) -O ihex $(OUTFILE).elf $(OUTFILE).hex
 	-@echo ""
+	cc -o $(LPCRC) tools/lpcrc/lpcrc.c
 	$(LPCRC) firmware.bin
 
 clean:
-	rm -f $(OBJS) $(LD_TEMP) $(OUTFILE).elf $(OUTFILE).bin $(OUTFILE).hex
+	rm -f $(OBJS) $(LD_TEMP) $(OUTFILE).elf $(OUTFILE).bin $(OUTFILE).hex $(LPCRC)

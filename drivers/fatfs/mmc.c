@@ -191,7 +191,7 @@ void deselect (void)
 /*-----------------------------------------------------------------------*/
 
 static
-BOOL select (void)	/* TRUE:Successful, FALSE:Timeout */
+BOOL select1 (void)	/* TRUE:Successful, FALSE:Timeout */
 {
 	CS_LOW();
 	if (wait_ready() != 0xFF) {
@@ -317,7 +317,7 @@ BYTE send_cmd (
 
 	/* Select the card and wait for ready */
 	deselect();
-	if (!select()) return 0xFF;
+	if (!select1()) return 0xFF;
 
 	/* Send command packet */
 	xmit_spi(cmd);						/* Start + Command index */
@@ -551,7 +551,7 @@ DRESULT disk_ioctl (
 
 		switch (ctrl) {
 		case CTRL_SYNC :		/* Make sure that no pending write process. Do not remove this or written sector might not left updated. */
-			if (select()) {
+			if (select1()) {
 				res = RES_OK;
 				deselect();
 			}

@@ -70,7 +70,6 @@ void PIOINT0_IRQHandler(void)
   return;
 }
 
-#if 0
 /**************************************************************************/
 /*! 
     @brief IRQ Handler for GPIO port 1 (currently checks pin 1.1)
@@ -108,13 +107,13 @@ void PIOINT1_IRQHandler(void)
 
   return;
 }
-#endif
 
 /**************************************************************************/
 /*! 
     @brief IRQ Handler for GPIO port 2 (currently checks pin 2.1)
 */
 /**************************************************************************/
+#if 0
 void PIOINT2_IRQHandler(void)
 {
   uint32_t regVal;
@@ -126,12 +125,14 @@ void PIOINT2_IRQHandler(void)
   }		
   return;
 }
+#endif
 
 /**************************************************************************/
 /*! 
     @brief IRQ Handler for GPIO port 3 (currently checks pin 3.1)
 */
 /**************************************************************************/
+#if 0
 void PIOINT3_IRQHandler(void)
 {
   uint32_t regVal;
@@ -143,6 +144,7 @@ void PIOINT3_IRQHandler(void)
   }		
   return;
 }
+#endif
 
 /**************************************************************************/
 /*! 

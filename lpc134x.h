@@ -1798,6 +1798,11 @@
 #define IOCON_SWDIO_PIO1_3_FUNC_GPIO              ((unsigned int) 0x00000001)
 #define IOCON_SWDIO_PIO1_3_FUNC_AD4               ((unsigned int) 0x00000002)
 #define IOCON_SWDIO_PIO1_3_FUNC_CT32B1_MAT2       ((unsigned int) 0x00000003)
+#define IOCON_SWDIO_PIO1_3_MODE_MASK              ((unsigned int) 0x00000018) //CB
+#define IOCON_SWDIO_PIO1_3_MODE_INACTIVE          ((unsigned int) 0x00000000) //CB
+#define IOCON_SWDIO_PIO1_3_MODE_PULLDOWN          ((unsigned int) 0x00000008) //CB
+#define IOCON_SWDIO_PIO1_3_MODE_PULLUP            ((unsigned int) 0x00000010) //CB
+#define IOCON_SWDIO_PIO1_3_MODE_REPEATER          ((unsigned int) 0x00000018) //CB
 #define IOCON_SWDIO_PIO1_3_HYS_MASK               ((unsigned int) 0x00000020)
 #define IOCON_SWDIO_PIO1_3_HYS_DISABLE            ((unsigned int) 0x00000000)
 #define IOCON_SWDIO_PIO1_3_HYS_ENABLE             ((unsigned int) 0x00000020)
